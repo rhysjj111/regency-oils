@@ -1,0 +1,24 @@
+<div class="mermaid text-center">
+---
+title: Regency Oils - Application Use Case Diagram
+---
+usecaseDiagram
+    actor "Route Planner" as planner
+    actor "Driver" as driver
+    actor "Warehouse Manager" as warehouse
+    actor "Office Admin" as admin
+
+    rectangle "Regency Oils Application" {
+        planner -- (Create & Manage Daily Route)
+        planner -- (View Real-time Progress)
+        planner -- (Handle Failed Stop Alerts)
+
+        driver -- (Execute Route & Log Stops)
+
+        warehouse -- (Log Audited Vehicle Totals)
+        warehouse -- (Investigate Discrepancies)
+
+        admin -- (View Reconciliation Report)
+        admin -- (View Real-time Progress)
+    }
+</div>

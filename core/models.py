@@ -20,6 +20,15 @@ class Customer(models.Model):
 
 class Site(models.Model):
     """Represents a physical location for collection/delivery."""
+
+    default_route = models.ForeignKey(
+        'RouteDefinition', 
+        on_delete=models.SET_NULL,
+        null=True, 
+        blank=True,
+        help_text="The route this site normally belongs to."
+    )
+
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='sites')
     address_line_1 = models.CharField(max_length=255)
     address_line_2 = models.CharField(max_length=255, blank=True)
@@ -115,3 +124,39 @@ class Collection(models.Model):
 
     def __str__(self):
         return f"Transaction at {self.stop.site}"
+
+class DailyVehicleLog(models.Model):
+    """
+    Records the start and end-of-day stock totals for a vehicle on a specific route.
+    Filled out by the warehouse manager for auditing purposes.
+    """
+    route = models.OneToOneField(Route, on_delete=models.PROTECT, related_name="log")
+    
+    # Waste Oil tracking
+    start_day_waste_oil = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    end_day_waste_oil = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    
+    # Fresh Oil tracking
+    start_day_fresh_oil = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    end_day_fresh_oil = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+
+    # Audit trail
+    checked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.PROTECT, 
+        help_text="Manager who verified the totals."
+    )
+    log_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Log for {self.route}"
+
+    @property
+    def waste_oil_collected(self):
+        """Calculates the net waste oil collected according to the log."""
+        return self.end_day_waste_oil - self.start_day_waste_oil
+
+    @property
+    def fresh_oil_delivered(self):
+        """Calculates the net fresh oil delivered according to the log."""
+        return self.start_day_fresh_oil - self.end_day_fresh_oil

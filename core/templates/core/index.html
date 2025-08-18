@@ -1,7 +1,86 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-  <h1>Welcome to the Regency Oils App</h1>
-  <p class="lead">This is the starting point for managing your collections and deliveries.</p>
-  <a href="#" class="btn btn-primary">View Today's Routes</a>
+<div class="container py-5">
+  <header class="text-center mb-5">
+      <h1 class="display-4">Regency Oils</h1>
+      <p class="lead text-muted">Custom Application Workflow Presentation</p>
+  </header>
+  <div class="card shadow-sm mb-5">
+    <div class="card-body">
+        <h2 class="card-title border-bottom pb-3 mb-3">Diagram 1: System Use Case Diagram</h2>
+        <p class="card-text text-muted">
+            This diagram provides a "10,000-foot view" of the entire system. It shows the key users (Actors) and the primary functions (Use Cases) they will perform with the new application, answering: <strong>"Who uses the system?"</strong> and <strong>"What do they do with it?"</strong>
+        </p>
+        <div class="text-center">
+            <img src="//www.plantuml.com/plantuml/png/NLDDRziy3BxhLn0zlBqqVT5lO2YA6as73MZc85sNCoDJjb15yYGwNJ3ilu-nxC3OoPJuV3oMgCV46BdREkN8C720QEk6eRAHDDlWLTBe22xEBvKwXJaPwmaApI4cXOSFdAn2nmHBXzvJF05Ci5gElNcqEzaSbskCr8Gk4IpGOpt0ruknNnfZjUXNM-lxLbbCR5Ua6Ntj2D1Ny2OgJvWegJZkInQgoUizbDObADhMMOriWuZzLW1Yh349x2aICft1A_ti14_mtn08vcZT7lfVwWEyFLrCYI-XXcTVpOAPpN4FHLTPfWg-1qOtu6-c-Az-HubjZKpmoa6_mzmc7Qb5hosbWN8xfJp_8YtkEOC4ErWAjOMoOnssHzBrbFJ3qWUi2DsCxNRaBcEe8wMHSFalOVnPqa7IEDkVb2pR47dWt4qvNz1NZk2piAZAcGf7aKU3A_LdSblV0bC24o9Kn49HNZQ6yGfcEAZxpSEw8V_f_l_D0nGCt930sy1dW8Ofver-Y4wJu5DZ3ODD82VHEc8wL-GhE4YhR22filnjbYyDh1lax32vZfIbhJ4K-n7O47yGUM5DFO4SQOx1MotIZ0vswVo04Dmspx20CCz1HamZdSABzU_3Wv7sP6fNIvZD-laQgyjZTNMiRfNARoWlhvLQBt9vawkCAOjHOgpkr2FvIbxsNm00" alt="Use Case Diagram">
+        </div>
+        <small class="d-block text-center mt-3 text-muted">This diagram is rendered live by the PlantUML server.</small>
+    </div>
+</div>
+  <div class="card shadow-sm mb-5">
+      <div class="card-body">
+          <h2 class="card-title border-bottom pb-3 mb-3">Diagram 2: Detailed End-to-End Operational Workflow</h2>
+          <p class="card-text text-muted">
+              This is the master process map, showing the complete operational flow from planning to reconciliation. Using "swimlanes," it clearly separates the responsibilities of each role and illustrates the handoffs between them. This diagram demonstrates <strong>how work and information flow through the organization</strong> using the application.
+          </p>
+          <div class="mermaid text-center">
+---
+title: Regency Oils - Detailed Operational Workflow
+---
+flowchart TD
+subgraph Phase 1: Planning; A1(Start) --> A2{Create Daily Route} --> A3{Add Stops} --> A4{Add Standard Stops...} & A5{Add 'Relief Stop'...}; A4 & A5 --> A6(Arrange Stop Sequence) --> A7(Assign Route); end
+subgraph Phase 2: Driver's Run; B1(Driver Starts Shift) --> B2{For Each Stop} --> B3(Navigate) --> B4{Select Outcome}; B4 --> B5(Collect) & B6(Deliver) & B7(Combined) & B8(Fail); B5 & B6 & B7 --> B9(Completed - Log Amounts); B8 --> B10(Stop Failed - Log Reasons); B9 & B10 --> B11{End?}; B11 -- No --> B2; B11 -- Yes --> B12(Return); end
+subgraph Phase 3: Reconciliation; C1(Vehicle at Depot) --> C2(Count Oil In and Out) --> C3(Enter Audited Total); D1(View Report) --> D2(System Compares) --> D3{Discrepancy?}; D3 -- No --> D4(Finalize); D3 -- Yes --> D5(Flag) --> D6(Notify) --> D7(Investigate); D4 & D7 --> D_End(End); end
+A7 --> B1; B12 --> C1; C3 & B9 --> D1;
+          </div>
+      </div>
+  </div>
+  
+  <div class="card shadow-sm mb-5">
+      <div class="card-body">
+          <h2 class="card-title border-bottom pb-3 mb-3">Diagram 3: Driver's Run - Stop Outcome Flowchart</h2>
+          <p class="card-text text-muted">
+              This flowchart provides a focused "drill-down" into the most critical on-the-road phase. It clearly visualizes the decision-making process at each customer stop, showing the three possible outcomes and the data captured for each. It is a perfect tool for <strong>training drivers and explaining the core mobile app functionality</strong>.
+          </p>
+          <div class="mermaid text-center">
+---
+title: Driver's Run - Stop Outcome Flowchart
+---
+flowchart TD
+A(Start) --> B{Proceed to Next Stop} --> C{Arrive: Determine Outcome};
+C --> D[Collect]; C --> E[Deliver]; C --> F[Combined]; C --> G[Fail];
+D & E & F --> H([Status: Completed - Log Results]);
+G --> I([Status: Failed - Log Details Why]);
+H & I --> J{Last stop?};
+J -- No --> B;
+J -- Yes --> K(End: Return to Depot);
+          </div>
+      </div>
+  </div>
+
+  <div class="card shadow-sm mb-5">
+    <div class="card-body">
+        <h2 class="card-title border-bottom pb-3 mb-3">Diagram 4: Data Flow Diagram (DFD)</h2>
+        <p class="card-text text-muted">
+            This final diagram focuses purely on the information itself. It shows <strong>how data moves between the users and the central application database</strong>. Unlike the other flowcharts, this is not about the sequence of events but rather the inputs and outputs of information, ensuring all data requirements are captured.
+        </p>
+        <div class="text-center">
+            <img src="//www.plantuml.com/plantuml/png/LP6zJWCn381tFuNfm7P832mCLIDkBJq5fCucSQ-MqYHAV5IyFRbUXOxH_Zx_EDbLfQBJ9S23dld2c0D9XC0dHKrOP3mhUYdiL5A4wYWmFZ-z0CmfYcCBDpPDoZW4Yf7B1gcY7TQyB_9z1xrTWoCLFgUfCkufqdXtZlkrSpYTn34QVv5ummS3dfI-gCwZUUJeVl0WeQB9EOWZbRIOPXW0x82TJzVORUSON_6ThxXitBDIguCvtqsv6NOMXfB6mhNY8vh0HIj0Rx7xt-L3Ksx2MmfXUHliIMbfjMrdDiNKAcDalqm3EExnhznCNhIXjZT-9gK0zz9sNiEMNOfEWjoEQM5EHG5s77txgry0" alt="Data Flow Diagram">
+        </div>
+        <small class="d-block text-center mt-3 text-muted">This diagram is rendered live by the PlantUML server.</small>
+    </div>
+</div>
+
+</div>
+{% endblock %}
+
+{% block additonal_scripts %} 
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default'
+        });
+    </script>
 {% endblock %}
