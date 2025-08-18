@@ -1,0 +1,22 @@
+@startuml
+!theme plain
+left to right direction
+scale 1.5
+
+rectangle "Route Planner" as RP
+rectangle "Driver" as DR
+rectangle "Warehouse Manager" as WM
+rectangle "Office Admin" as OA
+database "Regency Oils Application" as APP
+
+RP -down-> APP : New Route Details
+APP -up-> RP : Progress & Alerts
+
+DR --down-> APP : Stop & Collection Data
+APP -> DR : Assigned Route
+
+WM -> APP : Audited Oil Total
+
+APP -> OA : Reconciliation Report
+
+@enduml

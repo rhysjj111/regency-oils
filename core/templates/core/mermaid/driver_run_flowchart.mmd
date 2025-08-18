@@ -1,0 +1,20 @@
+<div class="mermaid">
+  ---
+  title: Driver's Run - Stop Outcome Flowchart
+  ---
+  flowchart TD
+      A(Start: Driver Views Assigned Route) --> B{Proceed to Next Stop};
+      B --> C{Arrive at Stop: Determine Outcome};
+      C -- Successful Collection --> D[Record: Waste Oil Qty, Payment, Docket #];
+      C -- Successful Delivery --> E[Record: Fresh Oil Details & Payment Received];
+      C -- Combined Stop --> F[Record: Both Collection & Delivery Details];
+      C -- Failed Stop --> G[Record: Reason, Notes & Photo];
+      D --> H([Status: Completed]);
+      E --> H;
+      F --> H;
+      G --> I([Status: Failed]);
+      H --> J{Is this the last stop?};
+      I --> J;
+      J -- No --> B;
+      J -- Yes --> K(End: Return Vehicle to Depot);
+  </div>

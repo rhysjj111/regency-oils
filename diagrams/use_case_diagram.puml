@@ -1,0 +1,47 @@
+@startuml
+left to right direction
+scale 1.2
+
+' Define Actors
+actor "Route Planner" as RP
+actor "Driver"
+actor "Warehouse Manager" as WM
+actor "Office Admin" as OA
+
+' Define Rectangle and Use Cases
+rectangle "Regency Oils Application" {
+  usecase "Create, Sequence & Manage Daily Route" as UC1
+  usecase "Log End-of-Day Audited Total" as UC5
+  usecase "Investigate Stock Discrepancies" as UC6
+  usecase "Execute Route & Log Stop Outcomes" as UC4
+  usecase "View Real-time Route Progress" as UC2
+  usecase "View Daily Reconciliation Report" as UC7
+  usecase "Handle Failed Stop Alerts" as UC3
+}
+
+' Define Notes for detail
+note right of UC5
+  <b>When:</b> At the depot, after the driver's
+  shift is complete.
+end note
+
+note top of UC6
+  <b>Of What:</b> Investigates the difference between
+  the driver's electronic total vs. the
+  manager's audited total.
+end note
+
+' Link Actors to Use Cases
+RP -- UC1
+RP -- UC2
+RP -- UC3
+RP -- UC6
+
+Driver -- UC4
+
+WM -- UC5
+WM -- UC6
+
+OA -- UC2
+OA -- UC7
+@enduml

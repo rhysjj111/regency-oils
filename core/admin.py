@@ -9,6 +9,7 @@ from .models import (
     Route,
     Stop,
     Collection,
+    DailyVehicleLog,
 )
 
 # We need to use a special class for the CustomUser
@@ -25,3 +26,4 @@ admin.site.register(RouteDefinition)
 admin.site.register(Route)
 admin.site.register(Stop)
 admin.site.register(Collection)
+admin.site.register(DailyVehicleLog)
