@@ -65,6 +65,9 @@ class Route(models.Model):
     drivers = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
     route_date = models.DateField()
 
+    class Meta:
+        ordering = ['-route_date', 'definition']
+
     def __str__(self):
         return f"{self.definition.name} on {self.route_date}"
 
@@ -83,8 +86,11 @@ class Stop(models.Model):
 
     route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name='stops')
     site = models.ForeignKey(Site, on_delete=models.PROTECT)
-    sequence = models.PositiveIntegerField(help_text="Planned order of the stop on the route")
-    # NEW: A flag to highlight important stops.
+    sequence = models.PositiveIntegerField(
+        default=0,
+        db_index=True
+    )
+    # A flag to highlight important stops.
     is_priority = models.BooleanField(default=False, help_text="Check this to highlight the stop for the driver.")
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
     failure_reason = models.CharField(
@@ -97,7 +103,9 @@ class Stop(models.Model):
     notes = models.TextField(blank=True, help_text="Driver notes for this stop")
 
     class Meta:
-        ordering = ['route', 'sequence']
+        ordering = ['sequence']
+        # Each stop on a route must have a unique sequence number
+        unique_together = ('route', 'sequence')
 
     def __str__(self):
         return f"Stop {self.sequence}: {self.site} on {self.route}"
