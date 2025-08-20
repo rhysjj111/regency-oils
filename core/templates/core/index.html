@@ -66,9 +66,43 @@ J -- Yes --> K(End: Return to Depot);
             This final diagram focuses purely on the information itself. It shows <strong>how data moves between the users and the central application database</strong>. Unlike the other flowcharts, this is not about the sequence of events but rather the inputs and outputs of information, ensuring all data requirements are captured.
         </p>
         <div class="text-center">
-            <img src="//www.plantuml.com/plantuml/png/LP6zJWCn381tFuNfm7P832mCLIDkBJq5fCucSQ-MqYHAV5IyFRbUXOxH_Zx_EDbLfQBJ9S23dld2c0D9XC0dHKrOP3mhUYdiL5A4wYWmFZ-z0CmfYcCBDpPDoZW4Yf7B1gcY7TQyB_9z1xrTWoCLFgUfCkufqdXtZlkrSpYTn34QVv5ummS3dfI-gCwZUUJeVl0WeQB9EOWZbRIOPXW0x82TJzVORUSON_6ThxXitBDIguCvtqsv6NOMXfB6mhNY8vh0HIj0Rx7xt-L3Ksx2MmfXUHliIMbfjMrdDiNKAcDalqm3EExnhznCNhIXjZT-9gK0zz9sNiEMNOfEWjoEQM5EHG5s77txgry0" alt="Data Flow Diagram">
+            <img src="//www.plantuml.com/plantuml/png/LP6zJWCn381tFuNfm7P8I4mCLIDkBJq5fCucSQ-MqYHAV5IyFRbUXOxH_Zx_EDbLfQBJ9S23dld2c0D9XC0dHKrOP3mhUYdiL5A4wYWmFZ-z0CmfYcCBDpPDoZW4Yf7B1gcY7TQyB_9z1xrTWoCLFgUfCkufqdXtZlkrSpYTn34QVv5ummS3dfI-gCwZUUJeVl0WeQB9EOWZbRIOPXW0x82TJzVORUSON_6ThxXitBDIguCvtqsv6NOMXfB6mhNY8vh0HIj0Rx7xt-L3Ksx2MmfXUHliIMbfjMrdDiNKAcDalqm3EExnhznCNhIXjZT-9gK0zz9sNiEMNOfEWjoEQM5EHM77qRUl-WK0" alt="Data Flow Diagram">
         </div>
         <small class="d-block text-center mt-3 text-muted">This diagram is rendered live by the PlantUML server.</small>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-5">
+    <div class="card-body">
+        <h2 class="card-title border-bottom pb-3 mb-3">Project Development Timeline</h2>
+        <p class="card-text text-muted">
+            This chart provides a rough estimate of how long the project should take.
+        </p>
+        <div class="mermaid text-center">
+---
+title: Project Development Timeline
+---
+gantt
+    title Project Timeline: Regency Oils App
+    dateFormat  YYYY-MM-DD
+    axisFormat  %b %d
+    
+    section Phase 0: Proposal & Prototyping
+    Prototype Dev (API & App) (2 Weeks)       :active, p0t1, 2025-08-18, 2w
+    Client Presentation & Approval (1 Week)  :p0t2, after p0t1, 1w
+
+    section Phase 1: Core Application Development
+    Admin Panel Polish (1 Week)              :p1t1, after p0t2, 1w
+    Full-Featured Driver App (3 Weeks)        :p1t2, after p1t1, 3w
+    Warehouse Manager Module (1 Week)        :p1t3, after p1t2, 1w
+    Office Dashboards & Reports (2 Weeks)     :p1t4, after p1t3, 2w
+    Deployment (1 Week)                      :p1t5, after p1t4, 1w
+
+    section Phase 2: Automations & Enhancements
+    Automated Communications (2 Weeks)        :p2t1, after p1t5, 2w
+    Stock Management Alerts (1 Week)         :p2t2, after p2t1, 1w
+    Fleet Management Module (3 Weeks)         :p2t3, after p2t2, 3w
+        </div>
     </div>
 </div>
 
