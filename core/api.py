@@ -12,7 +12,7 @@ class StopListView(APIView):
     API endpoint for a driver to get their stops for the current day.
     
     Expects a 'vehicle_id' query parameter in the URL, 
-    e.g., /api/today-stops/?vehicle_id=1
+    e.g., /api/stops/?vehicle_id=1
     """
     def get(self, request, *args, **kwargs):
         # 1. Get the vehicle ID from the URL
@@ -39,6 +39,21 @@ class StopListView(APIView):
         # 4. Serialize the data and return it as a JSON response
         serializer = StopSerializer(stops, many=True)
         return Response(serializer.data)
+
+class StopDetailView(APIView):
+    """
+    API endpoint to retrieve the details of a single stop.
+    """
+    def get(self, request, stop_id, *args, **kwargs):
+        try:
+            stop = Stop.objects.get(id=stop_id)
+            serializer = StopSerializer(stop) # Note: not many=True
+            return Response(serializer.data)
+        except Stop.DoesNotExist:
+            return Response(
+                {"error": "Stop not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 class StopCollectionCreateView(APIView):
     """
