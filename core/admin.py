@@ -1,36 +1,47 @@
-# In core/admin.py
-
 from django.contrib import admin
-# Make sure you've imported all the relevant models
-from .models import (
-    CustomUser, Customer, Site, Vehicle, RouteDefinition,
-    Route, Stop, Collection, DailyVehicleLog
-)
 from django.contrib.auth.admin import UserAdmin
+from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 
-# 1. This class defines how Stops will be displayed 'inline' on the Route page
-class StopInline(admin.TabularInline):
+# Import all your models from the core app
+from .models import (
+    CustomUser,
+    Customer,
+    Site,
+    Vehicle,
+    RouteDefinition,
+    Route,
+    Stop,
+    Collection,
+    DailyVehicleLog,
+)
+
+# --- Custom Admin Classes ---
+
+class StopInline(SortableInlineAdminMixin, admin.TabularInline):
+    """
+    Allows adding and drag-and-drop reordering of Stops
+    directly on the Route page.
+    """
     model = Stop
-    # 2. We only show fields the planner needs, hiding driver-only fields
+    # The 'sequence' field is now handled automatically by the sortable mixin
     fields = ('sequence', 'site', 'is_priority')
-    # 3. This gives the planner a few empty slots to add new stops
-    extra = 3
+    extra = 1 # Provides one extra empty row for adding a new stop
 
-# 4. This class defines the main admin page for the Route model
-class RouteAdmin(admin.ModelAdmin):
-    # 5. This is the magic line that includes the stop editor
+class RouteAdmin(SortableAdminMixin, admin.ModelAdmin):
+    """
+    Customizes the admin page for Routes to include the inline stop editor.
+    """
     inlines = [StopInline]
-    # 6. These improve the main list view of all routes
     list_display = ('definition', 'route_date', 'vehicle')
     list_filter = ('route_date', 'definition')
 
-# --- Update your registrations at the bottom of the file ---
-
-# Unregister the simple versions if they were there
-# admin.site.unregister(Route)
-# admin.site.unregister(Stop)
+# --- Model Registrations --
 
 # Register Route with its new, powerful admin class
+try:
+    admin.site.unregister(Route)
+except admin.sites.NotRegistered:
+    pass
 admin.site.register(Route, RouteAdmin)
 
 # We can keep the main Stop admin for now, so you can view all stops at once if needed
