@@ -1,0 +1,12 @@
+/* In core/static/core/css/admin_overrides.css */
+
+/*
+ * TARGETS: The container for each stop's form.
+ * FIX: Forces each stop into its own block, giving it proper spacing
+ * and preventing the "bunched up" look.
+*/
+/* your_app_name/static/your_app_name/admin.css */
+
+.column-sequence {
+    width: 20px !important; /* Adjust the width as needed */
+}
