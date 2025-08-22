@@ -104,11 +104,13 @@ class Stop(models.Model):
 
     class Meta:
         ordering = ['sequence']
-        # Each stop on a route must have a unique sequence number
-        unique_together = ('route', 'sequence')
 
     def __str__(self):
         return f"Stop {self.sequence}: {self.site} on {self.route}"
+    
+    def get_inline_title(self):
+        formatted_date = self.route.route_date.strftime("%d/%m/%Y")
+        return f"{self.site.customer} - {formatted_date}"
 
 class Collection(models.Model):
     """Records ALL transactions at a Stop."""

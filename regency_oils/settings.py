@@ -31,7 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+    "unfold",  # before django.contrib.admin
+    # "unfold.contrib.filters",  # optional, if special filters are needed
+    # "unfold.contrib.forms",  # optional, if special form elements are needed
+    # "unfold.contrib.inlines",  # optional, if special inlines are needed
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,8 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'rest_framework',
-    'adminsortable2',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -138,58 +141,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://8000-firebase-regency-oils-1755240935832.cluster-lu4mup47g5gm4rtyvhzpwbfadi.cloudworkstations.dev'
 ]
 
-JAZZMIN_SETTINGS = {
-    # Title on the login screen (19 chars max)
-    "site_title": "Regency Oils",
 
-    # Title on the brand text
-    "site_header": "Regency Oils",
-
-    # Brand text for the admin panel
-    "site_brand": "Regency Oils",
-
-    # Welcome text on the login screen
-    "welcome_sign": "Welcome to the Regency Oils Admin",
-
-    # Copyright on the footer
-    "copyright": "Regency Oils Ltd",
-    
-    # UI Customizer
-    "show_ui_builder": True,
-}
-
-# # (Optional) UI builder settings, these will be populated by the UI builder
-JAZZMIN_UI_TWEAKS = {
-#     "navbar_small_text": False,
-#     "footer_small_text": False,
-#     "body_small_text": False,
-#     "brand_small_text": False,
-#     "brand_colour": False,
-#     "accent": "accent-primary",
-#     "navbar": "navbar-white navbar-light",
-#     "no_navbar_border": False,
-#     "navbar_fixed": False,
-#     "layout_boxed": False,
-#     "footer_fixed": False,
-#     "sidebar_fixed": False,
-#     "sidebar": "sidebar-dark-primary",
-#     "sidebar_nav_small_text": False,
-#     "sidebar_disable_expand": False,
-#     "sidebar_nav_child_indent": False,
-#     "sidebar_nav_compact_style": False,
-#     "sidebar_nav_legacy_style": False,
-#     "sidebar_nav_flat_style": False,
-    "theme": "flatly",
-#     "dark_mode_theme": None,
-#     "button_classes": {
-#         "primary": "btn-outline-primary",
-#         "secondary": "btn-outline-secondary",
-#         "info": "btn-info",
-#         "warning": "btn-warning",
-#         "danger": "btn-danger",
-#         "success": "btn-success"
-#     }
-}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

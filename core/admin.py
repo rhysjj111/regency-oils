@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
+from unfold.admin import TabularInline, StackedInline, ModelAdmin
 
 # Import all your models from the core app
-from .models import (
+from .models import(
     CustomUser,
     Customer,
     Site,
@@ -17,36 +17,40 @@ from .models import (
 
 # --- Custom Admin Classes ---
 
-class StopInline(SortableInlineAdminMixin, admin.TabularInline):
+class StopInline(TabularInline):
     """
     Allows adding and drag-and-drop reordering of Stops
     directly on the Route page.
     """
     model = Stop
-    # The 'sequence' field is now handled automatically by the sortable mixin
+    # # The 'sequence' field is now handled automatically by the sortable mixin
     fields = ('sequence', 'site', 'is_priority')
-    extra = 1 # Provides one extra empty row for adding a new stop
+    ordering_field = "sequence"
+    # list_display = ["is_priority"]
+    compressed_fields = True
+    extra = 1
 
-class RouteAdmin(SortableAdminMixin, admin.ModelAdmin):
+    class Media:
+        css = {
+            'all': ('core/css/admin_overrides.css',)
+        }
+
+@admin.register(Route)
+class RouteAdmin(ModelAdmin):
     """
     Customizes the admin page for Routes to include the inline stop editor.
     """
     inlines = [StopInline]
-    list_display = ('definition', 'route_date', 'vehicle')
-    list_filter = ('route_date', 'definition')
+    # # list_display = ('definition', 'route_date', 'vehicle')
+    # list_filter = ('route_date', 'definition')
+
+
 
 # --- Model Registrations --
 
-# Register Route with its new, powerful admin class
-try:
-    admin.site.unregister(Route)
-except admin.sites.NotRegistered:
-    pass
-admin.site.register(Route, RouteAdmin)
-
 # We can keep the main Stop admin for now, so you can view all stops at once if needed
-admin.site.register(Stop)
-
+# admin.site.register(Stop)
+# admin.site.register(Route)
 # Make sure all your other models are still registered
 # (This is just an example, ensure it matches your file)
 admin.site.register(CustomUser, UserAdmin)
