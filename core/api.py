@@ -2,10 +2,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
+from django.shortcuts import get_object_or_404 # <-- ADD THIS IMPORT
+
 
 from .models import Route, Stop
 from .serializers import StopSerializer
 from .serializers import CollectionCreateSerializer
+from .models import Site
 
 class StopListView(APIView):
     """
@@ -76,3 +79,69 @@ class StopCollectionCreateView(APIView):
             return Response({"message": "Collection submitted successfully."}, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AddStopToRouteView(APIView):
+    """
+    API endpoint to add a specific Site to a specific Route as a new Stop.
+    """
+    def post(self, request, *args, **kwargs):
+        site_id = request.data.get('site_id')
+        route_id = request.data.get('route_id')
+
+        if not site_id or not route_id:
+            return Response(
+                {"error": "Site ID and Route ID are required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        site = get_object_or_404(Site, id=site_id)
+        route = get_object_or_404(Route, id=route_id)
+
+        if Stop.objects.filter(site=site, route=route).exists():
+            return Response(
+                {"error": f"{site.customer.name} is already on this route."},
+                status=status.HTTP_409_CONFLICT
+            )
+        
+        new_stop = Stop.objects.create(
+            site=site,
+            route=route,
+            sequence=route.stops.count()
+        )
+
+        return Response(
+            {"message": f"Successfully added {new_stop.site.customer.name} to {route.definition.name}."},
+            status=status.HTTP_201_CREATED
+        )
+
+class BulkAddStopsToRouteView(APIView):
+    """
+    API endpoint to add a list of Sites to a specific Route as new Stops.
+    """
+    def post(self, request, *args, **kwargs):
+        site_ids = request.data.get('site_ids', []) # Expect a list of IDs
+        route_id = request.data.get('route_id')
+
+        if not isinstance(site_ids, list) or not route_id:
+            return Response({"error": "A list of site_ids and a route_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        route = get_object_or_404(Route, id=route_id)
+        sites_to_add = Site.objects.filter(id__in=site_ids)
+        
+        current_stop_count = route.stops.count()
+        new_stops = []
+        
+        for i, site in enumerate(sites_to_add):
+            # Use get_or_create to avoid adding duplicates
+            stop, created = Stop.objects.get_or_create(
+                route=route,
+                site=site,
+                defaults={'sequence': current_stop_count + i}
+            )
+            if created:
+                new_stops.append(stop)
+
+        return Response(
+            {"message": f"Successfully added {len(new_stops)} new stops to {route.definition.name}."},
+            status=status.HTTP_201_CREATED
+        )

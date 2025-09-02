@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 class CustomUser(AbstractUser):
     # We can add new fields here later, e.g.:
@@ -34,6 +35,10 @@ class Site(models.Model):
     address_line_2 = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=100)
     postcode = models.CharField(max_length=10)
+    visit_frequency_days = models.PositiveIntegerField(
+        default=7, 
+        help_text="How often this site should be visited, in days (e.g., 7 for weekly)."
+    )
 
     def __str__(self):
         return f"{self.customer.name} - {self.postcode}"
@@ -60,13 +65,14 @@ class Route(models.Model):
     """A planned collection/delivery run for a specific day, based on a RouteDefinition."""
     # UPDATED: Links to the new RouteDefinition model instead of a text field.
     definition = models.ForeignKey(RouteDefinition, on_delete=models.PROTECT)
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT, null=True, blank=True)
     # This field handles the drivers by linking to the main User model.
     drivers = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
     route_date = models.DateField()
 
     class Meta:
         ordering = ['-route_date', 'definition']
+        unique_together = ('definition', 'route_date')
 
     def __str__(self):
         return f"{self.definition.name} on {self.route_date}"
@@ -104,6 +110,7 @@ class Stop(models.Model):
 
     class Meta:
         ordering = ['sequence']
+        unique_together = ('route', 'site')
 
     def __str__(self):
         return f"Stop {self.sequence}: {self.site} on {self.route}"
@@ -130,7 +137,7 @@ class Collection(models.Model):
 
     docket_number = models.CharField(max_length=50, blank=True)
     docket_image = models.ImageField(upload_to='dockets/%Y/%m/%d/', blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Transaction at {self.stop.site}"

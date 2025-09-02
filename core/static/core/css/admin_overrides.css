@@ -10,3 +10,7 @@
 .column-sequence {
     width: 20px !important; /* Adjust the width as needed */
 }
+
+#content > div.p-4.bg-white.rounded-lg.shadow.mt-6.dark\:bg-base-950 > div > div > div:nth-child(1) {
+    margin-right: 1rem; /* 1rem is typically 16px */
+}

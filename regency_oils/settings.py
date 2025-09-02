@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from django.templatetags.static import static
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -62,7 +63,8 @@ ROOT_URLCONF = 'regency_oils.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        # This 'DIRS' list tells Django to look in the main 'templates' folder
+        'DIRS': [BASE_DIR / "templates"], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,10 +144,88 @@ CSRF_TRUSTED_ORIGINS = [
     'https://8000-firebase-regency-oils-1755240935832.cluster-lu4mup47g5gm4rtyvhzpwbfadi.cloudworkstations.dev'
 ]
 
-
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+}   
+
+UNFOLD = {
+    "SITE_TITLE": "Regency Oils",
+    "SITE_HEADER": "Regency Oils",
+    "SITE_SYMBOL": "local_shipping",
+    "THEME": "light",  # Change to light theme
+    "DASHBOARD_CALLBACK": "core.dashboard.planner_dashboard_callback",
+
+    "STYLES": [
+        lambda request: static("core/css/admin_overrides.css"),
+        "https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css",
+    ],
+    "SCRIPTS": [
+        "https://cdn.jsdelivr.net/npm/toastify-js",
+    ],
+    
+    # --- THIS SECTION CONTROLS THE COLORS ---
+    "COLORS": {
+        "primary": {
+            "50": "#f8f9fa",
+            "100": "#f1f3f5",
+            "200": "#e9ecef",
+            "300": "#dee2e6",
+            "400": "#ced4da",
+            "500": "#adb5bd", # Main neutral color
+            "600": "#868e96",
+            "700": "#495057",
+            "800": "#343a40",
+            "900": "#212529",
+            "950": "#111315",
+        },
+    },
+
+    "SIDEBAR": {
+        "navigation": [
+            {
+                "title": "Operations",
+                "icon": "rocket_launch", # Changed
+                "items": [
+                    {
+                        "title": "Routes",
+                        "icon": "map", # Changed
+                        "link": "/admin/core/route/",
+                    },
+                    {
+                        "title": "Route Definitions",
+                        "icon": "pin_drop", # Changed
+                        "link": "/admin/core/routedefinition/",
+                    },
+                ],
+            },
+            {
+                "title": "Management",
+                "icon": "business_center", # Changed
+                "items": [
+                    {
+                        "title": "Customers",
+                        "icon": "groups", # Changed
+                        "link": "/admin/core/customer/",
+                    },
+                    {
+                        "title": "Sites",
+                        "icon": "location_city", # Changed
+                        "link": "/admin/core/site/",
+                    },
+                    {
+                        "title": "Vehicles",
+                        "icon": "local_shipping", # Changed
+                        "link": "/admin/core/vehicle/",
+                    },
+                    {
+                        "title": "Users",
+                        "icon": "person", # Changed
+                        "link": "/admin/core/customuser/",
+                    },
+                ],
+            },
+        ],
+    },
 }

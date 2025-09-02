@@ -10,3 +10,7 @@
 .column-sequence {
     width: 20px !important; /* Adjust the width as needed */
 }
+
+#route_filter {
+    margin-right: 1rem; /* 1rem is typically 16px */
+}
