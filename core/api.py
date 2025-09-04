@@ -9,6 +9,8 @@ from .models import Route, Stop
 from .serializers import StopSerializer
 from .serializers import CollectionCreateSerializer
 from .models import Site
+from django.db.models import Sum
+
 
 class StopListView(APIView):
     """

@@ -154,7 +154,7 @@ UNFOLD = {
     "SITE_TITLE": "Regency Oils",
     "SITE_HEADER": "Regency Oils",
     "SITE_SYMBOL": "local_shipping",
-    "THEME": "light",  # Change to light theme
+    "THEME": "light", # The demo uses the light theme
     "DASHBOARD_CALLBACK": "core.dashboard.planner_dashboard_callback",
 
     "STYLES": [
@@ -164,65 +164,91 @@ UNFOLD = {
     "SCRIPTS": [
         "https://cdn.jsdelivr.net/npm/toastify-js",
     ],
-    
-    # --- THIS SECTION CONTROLS THE COLORS ---
+
+    # --- THIS SECTION SETS THE DEMO'S COLORS ---
     "COLORS": {
         "primary": {
-            "50": "#f8f9fa",
-            "100": "#f1f3f5",
-            "200": "#e9ecef",
-            "300": "#dee2e6",
-            "400": "#ced4da",
-            "500": "#adb5bd", # Main neutral color
-            "600": "#868e96",
-            "700": "#495057",
-            "800": "#343a40",
-            "900": "#212529",
-            "950": "#111315",
-        },
+            "50": "#eef2ff",
+            "100": "#e0e7ff",
+            "200": "#c7d2fe",
+            "300": "#a5b4fc",
+            "400": "#818cf8",
+            "500": "#6366f1", # This is the main accent color
+            "600": "#4f46e5",
+            "700": "#4338ca",
+            "800": "#3730a3",
+            "900": "#312e81",
+            "950": "#1e1b4b"
+        }
     },
 
     "SIDEBAR": {
         "navigation": [
             {
                 "title": "Operations",
-                "icon": "rocket_launch", # Changed
+                "icon": "rocket_launch",
                 "items": [
                     {
-                        "title": "Routes",
-                        "icon": "map", # Changed
-                        "link": "/admin/core/route/",
+                        "title": "Plan Routes", # Planner's main page
+                        "icon": "map",
+                        "link": "/admin/core/route/", 
+                    },
+                    {
+                        "title": "Loading Plans", # Manager's main page
+                        "icon": "inventory_2",
+                        "link": "/admin/core/routeforloading/", 
                     },
                     {
                         "title": "Route Definitions",
-                        "icon": "pin_drop", # Changed
+                        "icon": "pin_drop",
                         "link": "/admin/core/routedefinition/",
                     },
                 ],
             },
             {
                 "title": "Management",
-                "icon": "business_center", # Changed
+                "icon": "business_center",
                 "items": [
                     {
                         "title": "Customers",
-                        "icon": "groups", # Changed
+                        "icon": "groups",
                         "link": "/admin/core/customer/",
                     },
                     {
                         "title": "Sites",
-                        "icon": "location_city", # Changed
+                        "icon": "location_city",
                         "link": "/admin/core/site/",
                     },
                     {
                         "title": "Vehicles",
-                        "icon": "local_shipping", # Changed
+                        "icon": "local_shipping",
                         "link": "/admin/core/vehicle/",
                     },
                     {
                         "title": "Users",
-                        "icon": "person", # Changed
+                        "icon": "person",
                         "link": "/admin/core/customuser/",
+                    },
+                ],
+            },
+            {
+                "title": "Data Records",
+                "icon": "assessment",
+                "items": [
+                    {
+                        "title": "All Stops",
+                        "icon": "pin_drop",
+                        "link": "/admin/core/stop/",
+                    },
+                    {
+                        "title": "All Collections",
+                        "icon": "compost",
+                        "link": "/admin/core/collection/",
+                    },
+                    {
+                        "title": "Daily Vehicle Logs",
+                        "icon": "inventory",
+                        "link": "/admin/core/dailyvehiclelog/",
                     },
                 ],
             },

@@ -2,20 +2,25 @@
 import datetime
 from django.utils import timezone
 from django.db.models import Subquery, OuterRef
-from .models import Route, RouteDefinition, Stop, Site, Collection
+from .models import Route, RouteDefinition, Stop, Site, Collection, DailyVehicleLog
 
 def planner_dashboard_callback(request, context):
     today = datetime.date.today()
+    admin_user = request.user # Get the user who is loading the dashboard
 
-    # (Auto-creation of routes remains the same)
+    # Auto-create today's routes and their corresponding logs
     active_definitions = RouteDefinition.objects.filter(is_active=True)
     for definition in active_definitions:
-        Route.objects.get_or_create(
+        route, created = Route.objects.get_or_create(
             definition=definition, 
             route_date=today, 
             defaults={'vehicle': None}
         )
-    
+        
+        # If a new route was created, also create its daily log
+        if created:
+            DailyVehicleLog.objects.create(route=route, checked_by=admin_user)
+
     todays_routes = Route.objects.filter(route_date=today).prefetch_related('stops')
 
     # --- UPDATED: Unassigned Stops Query with Filtering ---

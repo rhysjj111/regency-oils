@@ -11,6 +11,10 @@
     width: 20px !important; /* Adjust the width as needed */
 }
 
-#route_filter {
+#content > div.p-4.bg-white.rounded-lg.shadow.mt-6.dark\:bg-base-950 > div > div > div:nth-child(1) {
     margin-right: 1rem; /* 1rem is typically 16px */
+}
+
+#route_form > div > div.p-4.bg-white.rounded-lg.shadow.dark\:bg-base-950.mb-6 {
+    margin: 0 !important;
 }

@@ -107,6 +107,18 @@ class Stop(models.Model):
     )
     invoice_number = models.CharField(max_length=50, blank=True)
     notes = models.TextField(blank=True, help_text="Driver notes for this stop")
+    planned_fresh_oil_load = models.DecimalField(
+        max_digits=8, 
+        decimal_places=2, 
+        default=0.00,
+        help_text="Fresh oil (in litres) to be loaded for this route, set by the planner."
+    )
+    actual_fresh_oil_loaded = models.DecimalField(
+        max_digits=8, 
+        decimal_places=2, 
+        default=0.00,
+        help_text="Actual fresh oil (in litres) loaded by the warehouse manager."
+    )  
 
     class Meta:
         ordering = ['sequence']
@@ -148,13 +160,12 @@ class DailyVehicleLog(models.Model):
     Filled out by the warehouse manager for auditing purposes.
     """
     route = models.OneToOneField(Route, on_delete=models.PROTECT, related_name="log")
-    
+
     # Waste Oil tracking
     start_day_waste_oil = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     end_day_waste_oil = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-    
+
     # Fresh Oil tracking
-    start_day_fresh_oil = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     end_day_fresh_oil = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
 
     # Audit trail
@@ -177,3 +188,13 @@ class DailyVehicleLog(models.Model):
     def fresh_oil_delivered(self):
         """Calculates the net fresh oil delivered according to the log."""
         return self.start_day_fresh_oil - self.end_day_fresh_oil
+
+
+class RouteForLoading(Route):
+    """
+    A proxy model to create a separate admin view for the Warehouse Manager.
+    """
+    class Meta:
+        proxy = True
+        verbose_name = "Route Loading Plan"
+        verbose_name_plural = "Route Loading Plans"
