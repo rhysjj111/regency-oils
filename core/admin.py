@@ -16,6 +16,7 @@ from .models import (
     Stop, Collection, DailyVehicleLog, RouteForLoading
 )
 from .views import StopCollectionView
+from .filters import TodayDateFieldListFilter, RouteTodayDateFieldListFilter
 
 
 # --- INLINES ---
@@ -40,7 +41,7 @@ class LoadingStopInline(TabularInline):
     # This custom method displays the site name as plain text (not a link)
     def get_site_display(self, obj):
         return str(obj.site)
-    get_site_display.short_description = "Site" # Sets the column header
+    get_site_display.short_description = "Site"
 
 
 # --- ADMIN CLASSES ---
@@ -145,20 +146,18 @@ class RouteForLoadingAdmin(ModelAdmin):
     """Admin for the Warehouse Manager's read-only loading view."""
     inlines = [LoadingStopInline]
     list_display = ('definition', 'route_date', 'vehicle')
-    list_filter = ('route_date',)
+    list_filter = (RouteTodayDateFieldListFilter,)
     readonly_fields = ('definition', 'route_date', 'vehicle', 'drivers')
 
     change_form_template = 'admin/route_loading_view.html'
 
-    def get_queryset(self, request):
-        # Always filter the list to only show today's routes
-        return super().get_queryset(request).filter(route_date=datetime.date.today())
-
 
 class DailyVehicleLogAdmin(ModelAdmin):
     list_display = ('route', 'checked_by', 'log_time')
-    list_filter = ('route__route_date',)
+    list_filter = (TodayDateFieldListFilter,)
 
+    # This method controls the layout of the form itself. It checks if you are editing an existing log (if obj:)
+    # When editing an existing log: It shows our special display_route method, which is a non-clickable, read-only text field.
     def get_fieldsets(self, request, obj=None):
         if obj:
             return (
@@ -175,12 +174,15 @@ class DailyVehicleLogAdmin(ModelAdmin):
                 }),
             )
 
+    # get_readonly_fields tells Django to always make the "Checked By" field read-only, if you are editing an existing log.
     def get_readonly_fields(self, request, obj=None):
         if obj: 
             return ['display_route', 'display_checked_by']
         else:
             return ['display_checked_by']
 
+    # Runs when the form is saved. The if not obj.pk: check means "if this is a brand new object," 
+    # and it automatically sets the checked_by field to the currently logged-in user, creating a secure audit trail.
     def save_model(self, request, obj, form, change):
         if not obj.pk:
             obj.checked_by = request.user
@@ -195,6 +197,7 @@ class DailyVehicleLogAdmin(ModelAdmin):
             request, object_id, form_url, extra_context=extra_context,
         )
     
+    # Customizes the route dropdown, so it only shows routes that haven't been created for a log today.
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "route":
             today = datetime.date.today()
@@ -202,10 +205,12 @@ class DailyVehicleLogAdmin(ModelAdmin):
             kwargs["queryset"] = Route.objects.filter(route_date=today).exclude(id__in=logged_route_ids)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+    #Helper method to create a read-only text field for the route.
     def display_route(self, obj):
         return str(obj.route)
     display_route.short_description = "Route"
 
+    #Helper method to create a read-only text field for the route.
     def display_checked_by(self, obj):
         # When creating a new form, 'obj' doesn't exist yet, so we can't show a user.
         # It will be set automatically on save.
@@ -213,10 +218,6 @@ class DailyVehicleLogAdmin(ModelAdmin):
             return obj.checked_by.get_full_name() or obj.checked_by.username
         return "Set automatically on save"
     display_checked_by.short_description = "Checked By"
-
-    def response_add(self, request, obj, post_url_continue=None):
-        # Redirect back to the main list page after saving a new log
-        return HttpResponseRedirect("../")
 
 # --- REGISTRATIONS ---
 
