@@ -1,0 +1,56 @@
+{% extends "unfold/layouts/base.html" %}
+{% load admin_urls crispy_forms_tags unfold i18n static %}
+
+{% block content_title %}
+    <h1>Stop {{ stop.sequence|add:1 }}</h1>
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="{% url 'admin:jsi18n' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="content-main" x-data="{ view: 'options' }">
+        <div x-show="view === 'options'" class="flex flex-col items-center justify-center" style="height: calc(100vh - 140px);">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">
+                    Stop {{ stop.sequence|add:1 }}: {{ stop.site.customer.name }}
+                </h2>
+                <p class="text-md text-gray-600">
+                    {{ stop.site.address_line_1 }}, {{ stop.site.postcode }}
+                </p>
+            </div>
+            {% component "unfold/components/flex.html" with col=1 class="gap-8 max-w-s" %}
+                {% component "unfold/components/button.html" with class=complete_button.class attrs=complete_button.attrs %}
+                    {{ complete_button.title }}
+                {% endcomponent %}
+
+                {% component "unfold/components/button.html" with class=failed_button.class attrs=failed_button.attrs %}
+                    {{ failed_button.title }}
+                {% endcomponent %}
+
+                {% component "unfold/components/button.html" with href=back_to_list_button.href class=back_to_list_button.class variant=back_to_list_button.variant %}
+                    {{ back_to_list_button.title }}
+                {% endcomponent %}
+            {% endcomponent %}
+        </div>
+
+        <div x-show="view === 'complete'" style="display: none;" class="flex flex-col gap-1 mb-8">
+            {% crispy collection_form %}
+            {% component "unfold/components/button.html" with class=back_button.class attrs=back_button.attrs variant=back_button.variant%}
+                {{ back_button.title }}
+            {% endcomponent %}
+        </div>
+
+        <div x-show="view === 'failed'"
+             style="display: none;" 
+             class="flex flex-col gap-1 mb-8">
+            {% crispy form %}
+            {% component "unfold/components/button.html" with class=back_button.class attrs=back_button.attrs variant=back_button.variant%}
+                {{ back_button.title }}
+            {% endcomponent %}
+        </div>
+    </div>
+{% endblock %}
+

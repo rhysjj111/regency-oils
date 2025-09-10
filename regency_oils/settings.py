@@ -34,8 +34,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "unfold",  # before django.contrib.admin
     # "unfold.contrib.filters",  # optional, if special filters are needed
-    # "unfold.contrib.forms",  # optional, if special form elements are needed
-    # "unfold.contrib.inlines",  # optional, if special inlines are needed
+    "crispy_forms",
+    # "unfold.contrib.inlines",  # optional, if special inlines are needed,
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
+CRISPY_TEMPLATE_PACK = "unfold_crispy"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["unfold_crispy"]
 
 
 MIDDLEWARE = [
@@ -156,7 +159,7 @@ UNFOLD = {
     "SITE_SYMBOL": "local_shipping",
     "THEME": "light", # The demo uses the light theme
     "DASHBOARD_CALLBACK": "core.dashboard.planner_dashboard_callback",
-
+    "SHOW_HISTORY": False,
     "STYLES": [
         lambda request: static("core/css/admin_overrides.css"),
         "https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css",
@@ -167,19 +170,20 @@ UNFOLD = {
 
     # --- THIS SECTION SETS THE DEMO'S COLORS ---
     "COLORS": {
-        "primary": {
-            "50": "#eef2ff",
-            "100": "#e0e7ff",
-            "200": "#c7d2fe",
-            "300": "#a5b4fc",
-            "400": "#818cf8",
-            "500": "#6366f1", # This is the main accent color
-            "600": "#4f46e5",
-            "700": "#4338ca",
-            "800": "#3730a3",
-            "900": "#312e81",
-            "950": "#1e1b4b"
-        }
+        "primary": { # Teal accent color
+            "50": "#f0fdfa",
+            "100": "#ccfbf1",
+            "200": "#99f6e4",
+            "300": "#5eead4",
+            "400": "#2dd4bf",
+            "500": "#14b8a6",
+            "600": "#0d9488",
+            "700": "#0f766e",
+            "800": "#115e59",
+            "900": "#134e4a",
+            "950": "#042f2e",
+        },
+
     },
 
     "SIDEBAR": {

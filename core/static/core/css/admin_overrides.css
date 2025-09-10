@@ -18,3 +18,8 @@
 #route_form > div > div.p-4.bg-white.rounded-lg.shadow.dark\:bg-base-950.mb-6 {
     margin: 0 !important;
 }
+
+.driver-stop-card {
+    display: block; /* Important: Make the link behave like a block */
+    margin-bottom: 0.5rem !important; /* 16px of space below each card */
+}

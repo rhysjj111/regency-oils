@@ -1,0 +1,42 @@
+{% extends "admin/base_site.html" %}
+{% load unfold %} 
+
+{% block content_title %}
+    <h1>Reconciliation Report for {{ original.definition.name }} on {{ original.route_date }}</h1>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div class="space-y-6">
+        
+        <h2 class="text-lg font-semibold">Financial Summary</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for card in financial_cards %}
+                {% component "unfold/components/card.html" with class=card.color_class %}
+                    {% component "unfold/components/text.html" %}
+                        {{ card.title }}
+                    {% endcomponent %}
+                    {% component "unfold/components/title.html" %}
+                        {{ card.metric }}
+                    {% endcomponent %}
+                {% endcomponent %}
+            {% endfor %}
+        </div>
+
+        <h2 class="text-lg font-semibold">Oil Reconciliation</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for card in oil_cards %}
+                {% component "unfold/components/card.html" %}
+                    {% component "unfold/components/text.html" %}
+                        {{ card.title }}
+                    {% endcomponent %}
+                    {% component "unfold/components/title.html" %}
+                        {{ card.metric }}
+                    {% endcomponent %}
+                {% endcomponent %}
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

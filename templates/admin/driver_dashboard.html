@@ -1,0 +1,39 @@
+{% extends "unfold/layouts/base.html" %}
+{% load unfold %}
+
+{% block content_title %}
+    {% if route %}
+        <h1>{{ route.definition.name }} - {{ route.route_date }}</h1>
+    {% else %}
+        <h1>Driver Dashboard</h1>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div id="content-main" class="space-y-6">
+    {% if route %}
+        {% for card in stops_cards_data %}
+            <a href="{{ card.link }}" class="driver-stop-card">
+                {% component "unfold/components/card.html" with label=card.label class=card.class %}
+                    {% component "unfold/components/text.html" with class="text-sm" %}
+                        <p> {{ card.title }} </p>
+                        {% component "unfold/components/title.html" %}
+                            <p>{{ card.subtitle }}</p>
+                        {% endcomponent %}
+                    {% endcomponent %}
+                {% endcomponent %}
+            </a>
+        {% endfor %}
+    {% else %}
+        {% component "unfold/components/card.html" %}
+            <p>
+                {% if route %}
+                    All stops for this route are complete.
+                {% else %}
+                    You have no route assigned for today.
+                {% endif %}
+            </p>
+        {% endcomponent %}
+    {% endif %}
+</div>
+{% endblock %}

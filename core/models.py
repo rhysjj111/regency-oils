@@ -101,9 +101,10 @@ class Stop(models.Model):
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
     failure_reason = models.CharField(
         max_length=20, 
-        choices=FailureReason.choices, 
-        blank=True, 
-        help_text="Reason for a failed stop"
+        choices=FailureReason.choices,
+        help_text="Reason for a failed stop",
+        blank=False,
+        null=False
     )
     invoice_number = models.CharField(max_length=50, blank=True)
     notes = models.TextField(blank=True, help_text="Driver notes for this stop")

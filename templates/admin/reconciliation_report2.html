@@ -1,0 +1,80 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content_title %}
+    <h1>Reconciliation Report for {{ route.definition.name }} on {{ route.route_date }}</h1>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div class="p-4 bg-white rounded-lg shadow dark:bg-base-950">
+        <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Financial Summary</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="border p-4 rounded-md bg-green-50 dark:bg-green-900/20 dark:border-green-800">
+                <h3 class="font-bold text-green-800 dark:text-green-300">Money In (Fresh Oil Sales)</h3>
+                <p class="text-2xl font-semibold mt-2 text-green-700 dark:text-green-200">£{{ driver_money_in|floatformat:2 }}</p>
+            </div>
+            <div class="border p-4 rounded-md bg-red-50 dark:bg-red-900/20 dark:border-red-800">
+                <h3 class="font-bold text-red-800 dark:text-red-300">Money Out (Waste Oil Payments)</h3>
+                <p class="text-2xl font-semibold mt-2 text-red-700 dark:text-red-200">£{{ driver_money_paid_out|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4 bg-white rounded-lg shadow mt-6 dark:bg-base-950">
+        <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Oil Reconciliation Summary (Litres)</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <h3 class="font-semibold text-gray-700 dark:text-gray-300">Planned Fresh Oil</h3>
+                <p class="text-2xl">{{ total_planned_fresh|floatformat:2 }}</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-700 dark:text-gray-300">Actual Fresh Oil Loaded</h3>
+                <p class="text-2xl">{{ total_actual_loaded|floatformat:2 }}</p>
+            </div>
+            <div>
+                <h3 class="font-semibold {% if fresh_oil_discrepancy != 0 %}text-red-500{% else %}text-green-500{% endif %}">Loading Discrepancy</h3>
+                <p class="text-2xl {% if fresh_oil_discrepancy != 0 %}text-red-500{% else %}text-green-500{% endif %}">{{ fresh_oil_discrepancy|floatformat:2 }}</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-700 dark:text-gray-300">Waste Oil (Driver Logs)</h3>
+                <p class="text-2xl">{{ driver_waste_collected|floatformat:2 }}</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-700 dark:text-gray-300">Waste Oil (Warehouse Log)</h3>
+                <p class="text-2xl">{{ final_log.end_day_waste_oil|default:"N/A"|floatformat:2 }}</p>
+            </div>
+            <div>
+                <h3 class="font-semibold {% if waste_oil_discrepancy is not None and waste_oil_discrepancy != 0 %}text-red-500{% else %}text-green-500{% endif %}">Collection Discrepancy</h3>
+                <p class="text-2xl {% if waste_oil_discrepancy is not None and waste_oil_discrepancy != 0 %}text-red-500{% else %}text-green-500{% endif %}">{{ waste_oil_discrepancy|default:"N/A"|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4 bg-white rounded-lg shadow mt-6 dark:bg-base-950">
+        <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Stop-by-Stop Breakdown</h2>
+        <table class="w-full text-sm text-left">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-base-900 dark:text-gray-400">
+                <tr>
+                    <th class="px-6 py-3">Stop</th>
+                    <th class="px-6 py-3">Planned Fresh (L)</th>
+                    <th class="px-6 py-3">Actual Loaded (L)</th>
+                    <th class="px-6 py-3">Actual Delivered (L)</th>
+                    <th class="px-6 py-3">Waste Collected (L)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stop in stops %}
+                <tr class="bg-white border-b dark:bg-base-950 dark:border-base-800">
+                    <td class="px-6 py-4 font-medium">{{ stop.site.customer.name }}</td>
+                    <td class="px-6 py-4">{{ stop.planned_fresh_oil_load|floatformat:2 }}</td>
+                    <td class="px-6 py-4">{{ stop.actual_fresh_oil_loaded|floatformat:2 }}</td>
+                    <td class="px-6 py-4">{{ stop.collection.fresh_oil_total_litres|default:"-"|floatformat:2 }}</td>
+                    <td class="px-6 py-4">{{ stop.collection.waste_oil_quantity|default:"-"|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
